@@ -1,14 +1,15 @@
 # 📊 CSV-Bot
 
-CSV-Bot is a simple Discord bot that exports all members from a server into a CSV file, including information about whether they are a Server Booster and if they have a specific role (e.g., `🏆 | OG's`).
+CSV-Bot is a simple Discord bot that exports only **eligible members** from a server into a CSV file. Only members with the **"⭐ | Member"** role are considered (bots are excluded). Additionally, if a member is a Server Booster and has the OG role **"🏆 | OG‘s"**, they are listed twice, increasing their chances in giveaways.
 
 ---
 
 ## 🚀 Features
-- ✅ Export all server members to a CSV file
-- ✅ Detect Server Boosters
-- ✅ Detect members with a specific role (e.g., `🏆 | OG's`)
-- ✅ Saves join date and all roles of each member
+- ✅ Exports eligible server members to a CSV file
+- ✅ Excludes bots
+- ✅ Only includes members with the **"⭐ | Member"** role
+- ✅ Doubles the entry for members who are Server Boosters and have the OG role (**"🏆 | OG‘s"**)
+- ✅ Saves the Discord name and join date for each member
 
 ---
 
@@ -16,7 +17,7 @@ CSV-Bot is a simple Discord bot that exports all members from a server into a CS
 
 ### **1️⃣ Clone the Repository**
 ```bash
-git clone https://github.com/yourusername/csv-bot.git
+git clone https://github.com/veroleone/csv-bot.git
 cd csv-bot
 ```
 
@@ -33,11 +34,11 @@ TOKEN=your_discord_bot_token_here
 GUILD_ID=your_server_id_here
 ```
 - **TOKEN** → Your bot token from the [Discord Developer Portal](https://discord.com/developers/applications)
-- **GUILD_ID** → Your server's ID (Right-click server name → Copy ID)
+- **GUILD_ID** → Your server's ID (Right-click the server name → Copy ID)
 
 ### **4️⃣ Enable Privileged Intents**
 1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
-2. Select your bot → Go to the **Bot** tab
+2. Select your bot and navigate to the **Bot** tab
 3. Enable **SERVER MEMBERS INTENT**
 4. Click **Save Changes**
 
@@ -45,40 +46,36 @@ GUILD_ID=your_server_id_here
 ```bash
 python main.py
 ```
-Once started, the bot will generate a `discord_members.csv` file with all members.
+When started, the bot will generate a `discord_members.csv` file with the eligible members.
 
 ---
 
 ## 📂 CSV Output Format
-The CSV file will contain:
+The CSV file will contain the following columns:
 ```csv
-Discord Name, Join Date, Server Booster, OG Member, Roles
-"@User1", "2024-01-10", "Yes", "No", "Member, Moderator"
-"@User2", "2023-12-05", "No", "Yes", "🏆 | OG's, Admin"
+Discord Name,Join Date
+"@User1","2024-01-10"
+"@User2","2023-12-05"
 ```
+*Note:* Members who are Server Boosters and have the OG role (**"🏆 | OG‘s"**) appear twice in the CSV, which increases their chance in giveaways.
 
 ---
 
 ## ❓ Troubleshooting
-### **Bot does not detect members**
-- Ensure the bot has **"Read Member Information"** permission in your Discord server.
-- Make sure **Server Members Intent** is enabled in the Developer Portal.
 
-### **Error: `NoneType` object has no attribute 'members'`**
-- Check if `GUILD_ID` is correctly set in `.env`
-- Re-invite the bot using the correct permissions
+### **Bot Does Not Detect Members**
+- Ensure the bot has the **"Read Member Information"** permission in your Discord server.
+- Verify that **SERVER MEMBERS INTENT** is enabled in the Developer Portal.
 
-### **Bot does not start?**
-- Ensure Python and dependencies are installed: `pip install -r requirements.txt`
-- Restart the bot and check for errors
+### **Error: `NoneType object has no attribute 'members'`**
+- Check that the `GUILD_ID` in the `.env` file is correct.
+- Ensure the bot is invited to the server with the correct permissions.
+
+### **Bot Does Not Start?**
+- Make sure Python and all dependencies are installed (`pip install -r requirements.txt`).
+- Restart the bot and check the error messages.
 
 ---
 
 ## ⚡ Contributing
-Feel free to submit pull requests or report issues!
-
----
-
-## 📜 License
-This project is open-source and licensed under the MIT License.
-
+Pull requests and issue reports are welcome!

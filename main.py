@@ -8,11 +8,11 @@ load_dotenv()
 TOKEN = os.getenv("TOKEN")
 GUILD_ID = int(os.getenv("GUILD_ID"))
 OG_ROLE_NAME = "🏆 | OG‘s"
+MEMBER_ROLE_NAME = "⭐ | Member"
 
 class MyClient(discord.Client):
     async def on_ready(self):
         print(f'Logged in as {self.user}')
-        
         print(f"🔍 Debug: Using GUILD_ID = {GUILD_ID}")
         guild = self.get_guild(GUILD_ID)
         if guild is None:
@@ -22,17 +22,23 @@ class MyClient(discord.Client):
         members = guild.members
         print(f"✅ Found {len(members)} members in the server.")
 
-
         with open('discord_members.csv', 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
-            writer.writerow(["Discord Name", "Join Date", "Server Booster", "OG Member", "Roles"])
+            writer.writerow(["Discord Name", "Join Date"])
 
             for member in members:
-                is_booster = "Yes" if member.premium_since else "No"
-                is_og = "Yes" if any(role.name == OG_ROLE_NAME for role in member.roles) else "No"
-                roles = ", ".join([role.name for role in member.roles])
+                if member.bot:
+                    continue
+                if not any(role.name == MEMBER_ROLE_NAME for role in member.roles):
+                    continue
 
-                writer.writerow([member.name, member.joined_at.strftime('%Y-%m-%d'), is_booster, is_og, roles])
+                join_date = member.joined_at.strftime('%Y-%m-%d') if member.joined_at else "N/A"
+                row = [member.name, join_date]
+                if member.premium_since and any(role.name == OG_ROLE_NAME for role in member.roles):
+                    writer.writerow(row)
+                    writer.writerow(row)
+                else:
+                    writer.writerow(row)
 
         print("CSV file successfully created: discord_members.csv")
         await self.close()
